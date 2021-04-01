@@ -1,0 +1,14 @@
+---
+  pvs_console_product_ids:
+    1912 LTSR CU2: '{57F96DD2-03B6-46FD-A8AC-83CDBA410186}'
+
+  smb_location: \\file1\automation
+  
+  pvs_console_iso_location: "{{ smb_location }}\\Citrix\\Provisioning Services\\{{ pvs_console_version }}"
+  pvs_console_iso_file: Citrix_Provisioning_1912_7.iso
+  pvs_console_version: 1912 LTSR CU2
+  pvs_console_install_file_location: Console
+  pvs_console_install_file: PVS_Console_x64.exe
+  pvs_console_install_arguments: '/s /v"/qn"'
+  pvs_console_product_id: "{{ pvs_console_product_ids[pvs_console_version] }}"
+  pvs_console_install_state: present

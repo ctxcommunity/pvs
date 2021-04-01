@@ -1,0 +1,82 @@
+---
+  - name: "Add Image Disk: {{ pvs_staging_image_name }} to the PVS Store and Also Assign to Collection: {{ pvs_collection_name }}"
+    win_shell: |
+      $originalFilename = '{{ pvs_staging_image_filename }}'
+
+      if (Test-Path $originalFilename -PathType Leaf) {
+
+        if ({{ pvs_next_stage_image_use_static_image_name }}) {
+          $imageName = '{{ pvs_next_stage_image_static_image_name }}'
+          $imageFilename = $imageName + $imageFiletype
+
+        } else {
+          $imagePrefix = '{{ pvs_next_stage_image_prefix }}'
+          $imageFiletype = '{{ pvs_next_stage_image_filetype }}'
+          $imageMonth = '{0:d2}' -f (get-date).month
+          $imageDay = '{0:d2}' -f (get-date).day
+          $imageYear = (get-date).year
+          $imageHour = '{0:d2}' -f (get-date).hour
+
+          $imageName = $imagePrefix + $imageYear + '-' + $imageMonth + $imageDay + '-' + $imageHour
+          $imageFilename = $imageName + $imageFiletype
+        }
+
+        #How should it be handled if $ImageFilename already exists?
+        #Add test for new $ImageFilename - append as needed and retest if file exists - loop until file is unique
+
+        Rename-Item -path $originalFilename -NewName $imageFilename
+
+        Import-Module 'C:\Program Files\Citrix\Provisioning Services Console\Citrix.PVS.SnapIn.dll'
+
+        $pvsDisks = Get-PvsDiskLocator
+        $stagingImageFound = $false
+
+        ForEach ($pvsDisk in $pvsDisks) {
+          if ($pvsDisk.name -eq $imageFilename) {
+            $stagingImageDisk = $pvsDisk
+            $stagingImageFound = $true
+            break
+          }
+        }
+
+        If ($stagingImageFound -eq $false) {
+          $params = @{
+            Name = $imageName
+            SiteName = '{{ pvs_staging_image_site }}'
+            StoreName = '{{ pvs_staging_image_store }}'
+            RebalanceEnabled = {{ pvs_staging_image_rebalance_enabled }}
+            RebalanceTriggerPercent = {{ pvs_staging_image_rebalance_trigger_precent }}
+            SubnetAffinity = {{ pvs_staging_image_subnet_affinity }}
+            VHDX = {{ pvs_staging_image_vhdx }}
+          }
+
+          $pvsDisk = New-PvsDiskLocator @params
+
+          $params = @{
+            DiskLocatorId = $pvsDisk.DiskLocatorId
+            WriteCacheType = {{ pvs_staging_image_writecache_type }}
+            WriteCacheSize = {{ pvs_staging_image_writecache_size }}
+            HaEnabled = {{ pvs_staging_image_ha_enabled }}
+            LicenseMode = {{ pvs_staging_image_license_mode }}
+            AccelerateOfficeActivation = {{ pvs_staging_image_accelerated_office_activation }}
+            AutoUpdateEnabled = {{ pvs_staging_image_auto_update_enabled }}
+            AdPasswordEnabled = {{ pvs_staging_image_ad_password_enabled }}
+            Date = get-date
+            Author = '{{ pvs_staging_image_author }}'
+            Title = '{{ pvs_staging_image_title }}'
+            Company = '{{ pvs_staging_image_company }}'
+          }
+
+          Set-PvsDisk @params
+
+          $params = @{
+            DiskLocatorId = $pvsDisk.DiskLocatorId
+            SiteId = $pvsDisk.SiteId
+            CollectionName = '{{ pvs_collection_name }}'
+            RemoveExisting = {{ pvs_collection_remove_existing }}
+          }
+
+          Add-PvsDiskLocatorToDevice @params
+        }
+      }
+    become: yes

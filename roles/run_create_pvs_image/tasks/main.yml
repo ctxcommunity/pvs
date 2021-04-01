@@ -1,0 +1,7 @@
+---
+  - name: Run Image Wizard to Convert local Disk to .VHDX Container
+    win_shell: imagingwizard.exe {{ pvs_image_wizard_arguments }}
+    args:
+      executable: cmd
+      chdir: "{{ pvs_image_executable_location }}"
+    become: yes

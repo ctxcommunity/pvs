@@ -1,0 +1,7 @@
+---
+  pvs_image_executable_location: C:\Program Files\Citrix\Provisioning Services\
+
+  pvs_staging_image_location: \\pvs1\vdisks
+  pvs_staging_image_name: ansible_staging_image
+
+  pvs_image_wizard_arguments: "P2Vhdx {{ pvs_staging_image_name }} {{ pvs_staging_image_location }}"

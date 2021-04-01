@@ -1,0 +1,31 @@
+---
+  pvs_staging_image_location: \\pvs1\vdisks
+  pvs_staging_image_name: ansible_staging_image
+  pvs_staging_image_filename: '{{ pvs_staging_image_location }}\{{ pvs_staging_image_name }}.vhdx'
+
+  pvs_next_stage_image_prefix: Test-Image-
+  pvs_next_stage_image_filetype: .vhdx
+
+  pvs_next_stage_image_use_static_image_name: $false
+  pvs_next_stage_image_static_image_name: Test-Image-February
+
+  pvs_collection_name: Collection
+  pvs_collection_remove_existing: $true
+
+  pvs_staging_image_site: Site
+  pvs_staging_image_store: Store
+  pvs_staging_image_rebalance_enabled: $true
+  pvs_staging_image_rebalance_trigger_precent: 50
+  pvs_staging_image_subnet_affinity: 0
+  pvs_staging_image_vhdx: $true
+
+  pvs_staging_image_writecache_type: 12
+  pvs_staging_image_writecache_size: 2048
+  pvs_staging_image_ha_enabled: $true
+  pvs_staging_image_license_mode: 2
+  pvs_staging_image_accelerated_office_activation: $true
+  pvs_staging_image_auto_update_enabled: $false
+  pvs_staging_image_ad_password_enabled: $true
+  pvs_staging_image_author: Ansible Automation
+  pvs_staging_image_title: "Ansible Staged Image"
+  pvs_staging_image_company: "Company"

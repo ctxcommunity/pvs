@@ -1,0 +1,32 @@
+---
+  - name: Mount Citrix PVS ISO
+    win_shell: |
+      $mountResult = Mount-DiskImage -ImagePath '{{ pvs_device_iso_location }}\{{ pvs_device_iso_file }}'
+      $driveLetter = ($mountResult | Get-Volume).DriveLetter
+      return $driveLetter
+    register: mounted_iso_drive_letter
+    changed_when: false
+    become: yes
+
+  - name: "Install PVS Device Version {{ pvs_device_version }}"
+    win_package:
+      path: "{{ mounted_iso_drive_letter.stdout[0] }}:\\{{ pvs_device_install_file_location }}\\{{ pvs_device_install_file }}"
+      product_id: "{{ pvs_device_product_id }}"
+      arguments: "{{ pvs_device_install_arguments }}"
+      state: "{{ pvs_device_install_state }}"
+
+  - name: Dismount Citrix PVS ISO
+    win_shell: Dismount-DiskImage -ImagePath '{{ pvs_device_iso_location }}\{{ pvs_device_iso_file }}'
+    changed_when: false
+    become: yes
+
+  - name: https://support.citrix.com/article/CTX218232
+    win_regedit:
+      path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
+      name: ArpRetryCount
+      data: 0
+      type: dword
+
+  - name: Reboot the machine
+    win_reboot:
+      pre_reboot_delay: 10

@@ -1,13 +1,16 @@
 ---
   pvs_server_product_ids:
-    1912 LTSR CU2: '{E44A51CB-880D-4C88-8F77-50AEF2FB1D1C}'
+    1912 LTSR CU2:
+      product_id: '{E44A51CB-880D-4C88-8F77-50AEF2FB1D1C}'
+    1912 LTSR CU3:
+      product_id: '{8FC01C31-AC5C-4D80-8E24-66FDBEF1E92F}'
 
   smb_location: \\file1\automation
-  pvs_server_iso_location: "{{ smb_location }}\\Citrix\\Provisioning Services\\{{ pvs_server_version }}"
-  pvs_server_iso_file: Citrix_Provisioning_1912_7.iso
-  pvs_server_version: 1912 LTSR CU2
+  pvs_server_iso_location: "{{ smb_location }}\\Citrix\\Provisioning\\{{ pvs_server_version }}"
+  pvs_server_iso_file: Citrix_Provisioning_1912_13.iso
+  pvs_server_version: 1912 LTSR CU3
   pvs_server_install_file_location: Server
   pvs_server_install_file: PVS_Server_x64.exe
   pvs_server_install_arguments: '/s /v"/qn"'
-  pvs_server_product_id: "{{ pvs_server_product_ids[pvs_server_version] }}"
+  pvs_server_product_id: "{{ pvs_server_product_ids[pvs_server_version].product_id }}"
   pvs_server_install_state: present

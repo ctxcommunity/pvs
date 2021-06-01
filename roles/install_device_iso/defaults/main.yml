@@ -1,14 +1,17 @@
 ---
   pvs_device_product_ids:
-    1912 LTSR CU2: '{A92357AF-DB36-4160-911D-72F3C6AB7E13}'
+    1912 LTSR CU2:
+      product_id: '{A92357AF-DB36-4160-911D-72F3C6AB7E13}'
+    1912 LTSR CU3:
+      product_id: '{826AF1A2-DC36-43A4-8F01-ACA01F229F8E}'
 
   smb_location: \\file1\automation
 
-  pvs_device_iso_file: Citrix_Provisioning_1912_7.iso
-  pvs_device_version: 1912 LTSR CU2
-  pvs_device_iso_location: "{{ smb_location }}\\Citrix\\Provisioning Services\\{{ pvs_device_version }}"
+  pvs_device_iso_file: Citrix_Provisioning_1912_13.iso
+  pvs_device_version: 1912 LTSR CU3
+  pvs_device_iso_location: "{{ smb_location }}\\Citrix\\Provisioning\\{{ pvs_device_version }}"
   pvs_device_install_file_location: Device
   pvs_device_install_file: PVS_Device_x64.exe
   pvs_device_install_arguments: /S /v"/qn REBOOT=ReallySuppress"
-  pvs_device_product_id: "{{ pvs_device_product_ids[pvs_device_version] }}"
+  pvs_device_product_id: "{{ pvs_device_product_ids[pvs_device_version].product_id }}"
   pvs_device_install_state: present
